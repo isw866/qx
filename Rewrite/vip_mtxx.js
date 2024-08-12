@@ -7,8 +7,8 @@
 **************************************
 
 [rewrite_local]
-^https?:\/\/((h5|api)\.xiuxiu|api-sub|api\.posters)\.meitu\.com\/.+\/(vip|user|h\d|center|home) url script-response-body https://raw.githubusercontent.com/Yu9191/Script/main/mtxx.js
-https?:\/\/api\.posters\.meitu\.com\/matting\/znxc\.json  url script-response-body https://raw.githubusercontent.com/Yu9191/Script/main/mtxx2.js
+^https?:\/\/((h5|api)\.xiuxiu|api-sub|api\.posters)\.meitu\.com\/.+\/(vip|user|h\d|center|home) url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_mtxx.js
+https?:\/\/api\.posters\.meitu\.com\/matting\/znxc\.json  url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_mtxx.js
 [mitm]
 hostname = *.xiuxiu.meitu.com, api.posters.meitu.com, api-sub.meitu.com
 
