@@ -4,26 +4,13 @@
 
 #############################################
 [mitm]
-hostname =api.xbxxhz.com, epbox.gongfudou.com, *.xiuxiu.meitu.com, api.posters.meitu.com, api-sub.meitu.com, appwk.baidu.com, license.enpass.io, mb3admin.com, api.tipsoon.com, biz.cyapi.cn, wrapper.cyapi.cn, api.adapty.io, vas.wps.cn, account.wps.cn, api.revenuecat.com, api.revenuecat.com
+hostname =api.xbxxhz.com, epbox.gongfudou.com, *.xiuxiu.meitu.com, api.posters.meitu.com, api-sub.meitu.com, appwk.baidu.com, license.enpass.io, mb3admin.com, api.tipsoon.com, api.adapty.io, vas.wps.cn, account.wps.cn, api.revenuecat.com, api.revenuecat.com
 
 
 # >>>>>>>>>>>>>>> ✅ B ✅ <<<<<<<<<<<<<<
 # 百度文库解锁VIP文档阅读权限 //appwk.baidu.com
 ^https:\/\/appwk\.baidu\.com\/naapi\/user\/getinfo url script-response-body https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/baidu/baiduLib.js
 
-
-# >>>>>>>>>>>>>>> ✅ C ✅ <<<<<<<<<<<<<<
-# 彩云天气
-# ^https:\/\/api\.caiyunapp\.com\/v1\/activity\? url reject-dict
-# ^https:\/\/biz\.cyapi\.cn\/(p\/v1\/vip_info|v2\/user) url script-response-body https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/caiyun/caiyun.js
-# ^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\? url reject-dict
-
-# >>>>>>>>>>>>>>> ✅ E ✅ <<<<<<<<<<<<<<
-# Emby播放权限 //mb3admin.com
-# ^https:\/\/mb3admin\.com\/admin\/service(\/registration\/validateDevice|\/appstore\/register|\/registration\/validate|\/registration\/getStatus|\/supporter\/retrievekey) url script-echo-response https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/emby/unlock2.js
-
-
-# >>>>>>>>>>>>>>> ✅ J ✅ <<<<<<<<<<<<<<
 
 # >>>>>>>>>>>>>>> ✅ M ✅ <<<<<<<<<<<<<<
 # > 美图秀秀
