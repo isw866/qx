@@ -1,15 +1,10 @@
 #!name=解锁VIP服务合集
-#!desc=(R)当遇到部分软件无法联网时，取消勾选该重写
-#!author=奶思
-#!homepage=https://github.com/fmz200/wool_scripts
-#!icon=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/gif/naisi-01.gif
-#!raw-url=https://github.com/fmz200/wool_scripts/raw/main/QuantumultX/unlock/unlockVIP.snippet
-#!tg-group=https://t.me/lanjieguanggao
-#!date=2024-10-21 10:20:00
+#!desc=(R)当遇到部分软件无法联网时，取消勾选该重写，脚本来自互联网
+#!author=各位大佬
+
 #############################################
-
-hostname = appwk.baidu.com, license.enpass.io, mb3admin.com, api.tipsoon.com, biz.cyapi.cn, wrapper.cyapi.cn, api.adapty.io, vas.wps.cn, account.wps.cn, api.revenuecat.com, api.revenuecat.com, api*.faceu.mobi, api3-lq.faceu.mobi, commerce-api-lf.faceu.mobi, commerce-api-lq.faceu.mobi, lv-api-lq.ulikecam.com, lv-api-hl.ulikecam.com
-
+[mitm]
+hostname =api.xbxxhz.com, epbox.gongfudou.com, *.xiuxiu.meitu.com, api.posters.meitu.com, api-sub.meitu.com, appwk.baidu.com, license.enpass.io, mb3admin.com, api.tipsoon.com, biz.cyapi.cn, wrapper.cyapi.cn, api.adapty.io, vas.wps.cn, account.wps.cn, api.revenuecat.com, api.revenuecat.com, api*.faceu.mobi, api3-lq.faceu.mobi, commerce-api-lf.faceu.mobi, commerce-api-lq.faceu.mobi, lv-api-lq.ulikecam.com, lv-api-hl.ulikecam.com
 
 
 # >>>>>>>>>>>>>>> ✅ B ✅ <<<<<<<<<<<<<<
@@ -38,6 +33,9 @@ hostname = appwk.baidu.com, license.enpass.io, mb3admin.com, api.tipsoon.com, bi
 
 
 # >>>>>>>>>>>>>>> ✅ M ✅ <<<<<<<<<<<<<<
+# > 美图秀秀
+^https?:\/\/((h5|api)\.xiuxiu|api-sub|api\.posters)\.meitu\.com\/.+\/(vip|user|h\d|center|home) url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_mtxx.js
+https?:\/\/api\.posters\.meitu\.com\/matting\/znxc\.json  url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_mtxx.js
 
 
 
@@ -53,5 +51,12 @@ hostname = appwk.baidu.com, license.enpass.io, mb3admin.com, api.tipsoon.com, bi
 
 
 # >>>>>>>>>>>>>>> ✅ X ✅ <<<<<<<<<<<<<<
+# > 小白学习打印
+https://api.xbxxhz.com/graphql url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_xiaobaidayin.js
+# > 小白智慧打印
+https://epbox.gongfudou.com/graphql url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_xiaobaidayin.js
+# > 小白开屏广告 需清理缓存
+^https:\/\/api\.xbxxhz\.com\/big_data\/v1\/home_pages url reject
+
 # > 醒图 解锁VIP
 ^https:\/\/commerce-api\.faceu\.mobi\/commerce\/v1\/subscription\/user_info url script-request-header https://raw.githubusercontent.com/gjwj666/qx/main/XT.js
