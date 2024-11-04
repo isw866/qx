@@ -13,6 +13,19 @@
 # > 丰巢 微信小程序净化
 ^https:\/\/webchatapp\.fcbox\.com\/fcboxactivityweb\/api\/v2\/clientPage url reject-dict
 ^https:\/\/dsp\.fcbox\.com url reject-dict
+# 丰巢 - 首页服务推广
+^https:\/\/webchatapp\.fcbox\.com\/fcboxactivityweb\/api\/v2\/clientPage\/modulesAggregated\? - reject-dict
+# 丰巢 - 首页丰巢直播
+^https:\/\/webchatapp\.fcbox\.com\/fcboxactivityweb\/api\/v2\/clientPage\/getHomeLiveInfo$ - reject-dict
+# 丰巢 - 横幅和广告配置
+^https:\/\/dsp\.fcbox\.com\/adSearch\/ - reject-dict
+# 丰巢 - 订单页面 - 邀请开通会员横幅
+^https:\/\/webchatapp\.fcbox\.com\/post\/suggestion\/query$ - reject-dict
+# 丰巢 - 订单页面 - 好友助力
+^https:\/\/webchatapp\.fcbox\.com\/fcboxactivityweb\/marketingEntrance\/v2\/infoWithItems$ - reject-dict
+# 丰巢 - 订单页面 - 悬浮窗
+^https:\/\/webchatapp\.fcbox\.com\/fcboxactivityweb\/marketingEntrance\/info$ - reject-dict
+^https:\/\/wximg\.wxs\.qq\.com\/\d{3}|[1-9]\/\d{5}|[1-9]\/snscosdownload$  - reject
 
 #[mitm]
 hostname = gw.alicdn.com, img.alicdn.com, consumer.fcbox.com, webchatapp.fcbox.com, dsp.fcbox.com
