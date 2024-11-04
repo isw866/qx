@@ -17,7 +17,11 @@
 #^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/(v\d\/note\/feed|v\d\/note\/videofeed)\? url script-response-body https://raw.githubusercontent.com/zirawell/Ad-Cleaner/main/Collection/js/xiaohongshu.js
 #^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/v\d\/note\/(imagefeed|live_photo\/save) url script-response-body https://raw.githubusercontent.com/zirawell/Ad-Cleaner/main/Collection/js/xiaohongshu.js
 
+# > 中国移动 - 10086_GENERAL
+^https?:\/\/client\.app\.coc\.10086\.cn\/biz-orange\/DN\/init\/startInit url reject
+^https?:\/\/client\.app\.coc\.10086\.cn\/biz-orange\/DN\/explorePage\/getAdverList url reject
+^https?:\/\/(client\.app\.coc|h\.app\.coc|app)\.10086\.cn\/biz-orange\/DN\/emotionMarket url reject
 
 #[mitm]
-hostname = gw.alicdn.com, img.alicdn.com, webchatapp.fcbox.com, dsp.fcbox.com
+hostname = gw.alicdn.com, img.alicdn.com, webchatapp.fcbox.com, dsp.fcbox.com, client.app.coc.10086.cn, h.app.coc.10086.cn, app.10086.cn
 
