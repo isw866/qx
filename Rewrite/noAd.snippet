@@ -16,6 +16,8 @@
 # > 小红薯水印
 ^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/(v\d\/note\/feed|v\d\/note\/videofeed)\? url script-response-body https://raw.githubusercontent.com/zirawell/Ad-Cleaner/main/Collection/js/xiaohongshu.js
 ^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/v\d\/note\/(imagefeed|live_photo\/save) url script-response-body https://raw.githubusercontent.com/zirawell/Ad-Cleaner/main/Collection/js/xiaohongshu.js
+# 评论区图片水印(实验功能可能无效)
+^https?:\/\/ci\.xiaohongshu\.com\/system_config\/watermark url reject-img
 
 #[mitm]
 hostname = gw.alicdn.com, img.alicdn.com, webchatapp.fcbox.com, dsp.fcbox.com
