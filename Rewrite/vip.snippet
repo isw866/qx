@@ -4,7 +4,7 @@
 
 #############################################
 [mitm]
-hostname =api.xbxxhz.com, epbox.gongfudou.com, *.xiuxiu.meitu.com, api.posters.meitu.com, api-sub.meitu.com, appwk.baidu.com, license.enpass.io, mb3admin.com, api.tipsoon.com, biz.cyapi.cn, wrapper.cyapi.cn, api.adapty.io, vas.wps.cn, account.wps.cn, api.revenuecat.com, api.revenuecat.com, api*.faceu.mobi, api3-lq.faceu.mobi, commerce-api-lf.faceu.mobi, commerce-api-lq.faceu.mobi, lv-api-lq.ulikecam.com, lv-api-hl.ulikecam.com
+hostname =api.xbxxhz.com, epbox.gongfudou.com, *.xiuxiu.meitu.com, api.posters.meitu.com, api-sub.meitu.com, appwk.baidu.com, license.enpass.io, mb3admin.com, api.tipsoon.com, biz.cyapi.cn, wrapper.cyapi.cn, api.adapty.io, vas.wps.cn, account.wps.cn, api.revenuecat.com, api.revenuecat.com
 
 
 # >>>>>>>>>>>>>>> ✅ B ✅ <<<<<<<<<<<<<<
@@ -18,36 +18,23 @@ hostname =api.xbxxhz.com, epbox.gongfudou.com, *.xiuxiu.meitu.com, api.posters.m
 # ^https:\/\/biz\.cyapi\.cn\/(p\/v1\/vip_info|v2\/user) url script-response-body https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/caiyun/caiyun.js
 # ^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\? url reject-dict
 
-
 # >>>>>>>>>>>>>>> ✅ E ✅ <<<<<<<<<<<<<<
 # Emby播放权限 //mb3admin.com
 # ^https:\/\/mb3admin\.com\/admin\/service(\/registration\/validateDevice|\/appstore\/register|\/registration\/validate|\/registration\/getStatus|\/supporter\/retrievekey) url script-echo-response https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/emby/unlock2.js
 
 
-
-
 # >>>>>>>>>>>>>>> ✅ J ✅ <<<<<<<<<<<<<<
-# > 剪映解锁会员
-^https?:\/\/commerce-api-.*\.faceu\.mobi\/commerce\/v1\/(subscription\/user_info|purchase\/draft_unlock|effect\/check_effects) url script-request-header https://raw.githubusercontent.com/yqc007/QuantumultX/master/VideoFusionVipCrack.js
-
-
 
 # >>>>>>>>>>>>>>> ✅ M ✅ <<<<<<<<<<<<<<
 # > 美图秀秀
 ^https?:\/\/((h5|api)\.xiuxiu|api-sub|api\.posters)\.meitu\.com\/.+\/(vip|user|h\d|center|home) url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_mtxx.js
 https?:\/\/api\.posters\.meitu\.com\/matting\/znxc\.json  url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_mtxx.js
 
-
-
 # >>>>>>>>>>>>>>> ✅ O ✅ <<<<<<<<<<<<<<
-# > VSCO Pro
-# ^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/?(.*?)*$) url script-response-body https://raw.githubusercontent.com/chxm1023/Rewrite/main/vsco.js
-
 
 # >>>>>>>>>>>>>>> ✅ W ✅ <<<<<<<<<<<<<<
 # > WPS 解锁VIP
 # ^https:\/\/(vas|account)\.wps\.cn\/(query\/api\/v\d\/list_purchase_info|api\/users\/\d+\/overview) url script-response-body https://raw.githubusercontent.com/510004015/Quantumult_X/Remote/Premium/WPSOffice.js
-
 
 
 # >>>>>>>>>>>>>>> ✅ X ✅ <<<<<<<<<<<<<<
@@ -57,6 +44,3 @@ https://api.xbxxhz.com/graphql url script-response-body https://raw.githubuserco
 https://epbox.gongfudou.com/graphql url script-response-body https://raw.githubusercontent.com/isw866/qx/main/Rewrite/vip_xiaobaidayin.js
 # > 小白开屏广告 需清理缓存
 ^https:\/\/api\.xbxxhz\.com\/big_data\/v1\/home_pages url reject
-
-# > 醒图 解锁VIP
-^https:\/\/commerce-api\.faceu\.mobi\/commerce\/v1\/subscription\/user_info url script-request-header https://raw.githubusercontent.com/gjwj666/qx/main/XT.js
