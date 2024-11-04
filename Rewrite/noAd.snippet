@@ -13,8 +13,9 @@
 # > 丰巢 微信小程序净化
 ^https:\/\/webchatapp\.fcbox\.com\/fcboxactivityweb\/api\/v2\/clientPage url reject-dict
 ^https:\/\/dsp\.fcbox\.com url reject-dict
-
-
+# > 小红薯水印
+^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/(v\d\/note\/feed|v\d\/note\/videofeed)\? url script-response-body https://raw.githubusercontent.com/zirawell/Ad-Cleaner/main/Collection/js/xiaohongshu.js
+^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/v\d\/note\/(imagefeed|live_photo\/save) url script-response-body https://raw.githubusercontent.com/zirawell/Ad-Cleaner/main/Collection/js/xiaohongshu.js
 
 #[mitm]
 hostname = gw.alicdn.com, img.alicdn.com, webchatapp.fcbox.com, dsp.fcbox.com
