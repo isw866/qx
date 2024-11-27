@@ -5,8 +5,8 @@
 
 #[rewrite_local]
 
-# > 误杀少 解决阿里系的开屏 目前测试咸鱼/钉钉 感谢【zzzzzz】分享
-^https:\/\/(gw|img)\.alicdn\.com\/imgextra\/.+\/[\w!]+\d+-\d+-.+-\b([8-9]\d{2,}|[1-9]\d{3,})\b-\b([5-9]\d{2,}|[1-9]\d{3,})\b url reject-dict
+# 中国移动 //client.app.coc.10086.cn
+^https:\/\/client\.app\.coc\.10086\.cn\/biz-orange\/DN\/(explorePage\/getAdverList|init\/startInit) reject
 
 # > 丰巢App
 ^https?:\/\/consumer\.fcbox\.com\/v\d\/ad\/ url reject
@@ -19,5 +19,5 @@
 
 
 #[mitm]
-hostname = img.alicdn.com, webchatapp.fcbox.com, dsp.fcbox.com, client.app.coc.10086.cn, h.app.coc.10086.cn, app.10086.cn
+hostname =  webchatapp.fcbox.com, dsp.fcbox.com, client.app.coc.10086.cn, h.app.coc.10086.cn, app.10086.cn
 
