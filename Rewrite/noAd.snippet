@@ -18,6 +18,9 @@
 #^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/(v\d\/note\/feed|v\d\/note\/videofeed)\? url script-response-body https://raw.githubusercontent.com/zirawell/Ad-Cleaner/main/Collection/js/xiaohongshu.js
 #^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/v\d\/note\/(imagefeed|live_photo\/save) url script-response-body https://raw.githubusercontent.com/zirawell/Ad-Cleaner/main/Collection/js/xiaohongshu.js
 
+# > 京东金融 去广告
+URL-REGEX,^https?:\/\/ms\.jr\.jd\.com\/gw\/generic\/aladdin\/(new)?na\/m\/getLoadingPicture,REJECT
+
 
 #[mitm]
 hostname =  webchatapp.fcbox.com, dsp.fcbox.com, client.app.coc.10086.cn, h.app.coc.10086.cn, app.10086.cn
