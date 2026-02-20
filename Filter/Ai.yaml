@@ -1,0 +1,51 @@
+# NAME: Ai Rules
+payload:
+# > Google AI (Gemini/Bard)
+  - DOMAIN,ai.google.dev
+  - DOMAIN,makersuite.google.com
+  - DOMAIN-SUFFIX,gemini.google.com
+  - DOMAIN-SUFFIX,apis.google.com
+  - DOMAIN-SUFFIX,clients6.google.com
+  - DOMAIN-SUFFIX,clients4.google.com
+  - DOMAIN-SUFFIX,deepmind.com
+  - DOMAIN-SUFFIX,deepmind.google
+  - DOMAIN-SUFFIX,generativeai.google
+  - DOMAIN-SUFFIX,colab.google.com
+  - DOMAIN-SUFFIX,colab.research.google.com
+  - DOMAIN-SUFFIX,developerprofiles.google.com
+  - DOMAIN-SUFFIX,googleusercontent.com
+  - DOMAIN-SUFFIX,googleapis.com
+  - DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com
+
+
+# > Microsoft Copilot
+  - DOMAIN,api.msn.com
+  - DOMAIN,assets.msn.com
+  - DOMAIN,copilot.microsoft.com
+  - DOMAIN,gateway.bingviz.microsoft.net
+  - DOMAIN,gateway.bingviz.microsoftapp.net
+  - DOMAIN,in.appcenter.ms
+  - DOMAIN,location.microsoft.com
+  - DOMAIN,odc.officeapps.live.com
+  - DOMAIN,r.bing.com
+  - DOMAIN,self.events.data.microsoft.com
+  - DOMAIN,services.bingapis.com
+  - DOMAIN,sydney.bing.com
+  - DOMAIN,www.bing.com
+  - DOMAIN-SUFFIX,api.microsoftapp.net
+  - DOMAIN-SUFFIX,bing-shopping.microsoft-falcon.io
+  - DOMAIN-SUFFIX,edgeservices.bing.com
+
+# > OpenAI/ChatGPT
+  - DOMAIN,openaicom-api-bdcpf8c6d2e9atf6.z01.azurefd.net
+  - DOMAIN,openaicomproductionae4b.blob.core.windows.net
+  - DOMAIN,production-openaicom-storage.azureedge.net
+  - DOMAIN-SUFFIX,ai.com
+  - DOMAIN-SUFFIX,chatgpt.com
+  - DOMAIN-SUFFIX,livekit.cloud
+  - DOMAIN-SUFFIX,oaistatic.com
+  - DOMAIN-SUFFIX,oaiusercontent.com
+  - DOMAIN-SUFFIX,openai.com
+  - DOMAIN-SUFFIX,azureedge.net
+  - DOMAIN-SUFFIX,imgix.net
+
