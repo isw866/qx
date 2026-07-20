@@ -15,6 +15,15 @@ def main():
     rewrite_lines = []
     mitm_hosts = set()
 
+    # 定义需要过滤掉的无用注释关键词（不区分大小写）
+    # 只要注释行包含这些词，就会被直接无视
+    noise_keywords = [
+        'update', '更新', 'history', '历史', 'changelog', '日志', 
+        'tgchannel', 'telegram', '频道', '群组', 'author', '作者', 
+        'drew', 'by', 'donation', '赞赏', '打赏', 'github', 'repo',
+        'version', '版本', 'date', '时间', 'modified', 'crack', '解锁'
+    ]
+
     with open(list_file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
@@ -49,6 +58,12 @@ def main():
                     l = raw_line.strip()
                     if not l:
                         continue
+                    
+                    # 1. 过滤垃圾注释：如果这一行是注释，且包含了特定的无关关键词，直接跳过
+                    if l.startswith(';') or l.startswith('#'):
+                        l_lower = l.lower()
+                        if any(kw in l_lower for kw in noise_keywords):
+                            continue  # 命中了垃圾关键词，跳过这一行
                     
                     if l.lower() == '[rewrite_local]':
                         current_section = 'rewrite'
@@ -105,7 +120,6 @@ def main():
         with open(output_file, 'w', encoding='utf-8') as out:
             out.write('\n'.join(final_content))
 
-    # 如果有失败的，写入 GitHub Actions 的环境输出
     if failed_rules:
         github_output = os.environ.get('GITHUB_OUTPUT')
         if github_output:
