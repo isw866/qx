@@ -6,7 +6,7 @@ import re
 
 def clean_and_parse_content(content, noise_keywords, mitm_hosts):
     """
-    全量地毯式清洗规则内容，无差别抹除所有纯注释行，并切除有效规则的行尾注释
+    全量地毯式清洗规则内容，无差别抹除所有纯注释行（含 #, ;, //），并切除有效规则的行尾注释
     """
     sub_rewrite = []
     sub_mitm = []
@@ -31,15 +31,16 @@ def clean_and_parse_content(content, noise_keywords, mitm_hosts):
             current_section = 'unknown'
             continue
 
-        # 2. 强力防线：只要是纯注释行，无差别直接丢弃，不检查任何关键词
-        if stripped_line.startswith(';') or stripped_line.startswith('#'):
+        # 2. 强力防线：只要是纯注释行（支持 #、; 以及双斜杠 //），无差别直接丢弃
+        if stripped_line.startswith(';') or stripped_line.startswith('#') or stripped_line.startswith('//'):
             continue
 
-        # 3. 精准切除行尾的行内注释 (例如: url reject-img ; 屏蔽某某广告)
-        # 不管注释放了什么，只要有分号或井号在规则中间，后面的东西全部抹除
-        if ';' in stripped_line or '#' in stripped_line:
-            # 用正则精准切开规则体与注释体
-            parts = re.split(r'[;#]', stripped_line, 1)
+        # 3. 精准切除行尾的行内注释 (支持 ;, #, //)
+        # 不管注释放了什么，只要有分号、井号或双斜杠在规则中间，后面的东西全部抹除
+        # 先用正则把 // 统一替换成 ; 方便切分，或者直接用正则切分
+        if ';' in stripped_line or '#' in stripped_line or '//' in stripped_line:
+            # 用正则精准切开规则体与注释体（匹配 ;, # 或 //）
+            parts = re.split(r'[;#]|\/\/', stripped_line, 1)
             core_part = parts[0].strip()
             if not core_part:
                 continue
@@ -56,9 +57,9 @@ def clean_and_parse_content(content, noise_keywords, mitm_hosts):
                     for h in hosts.split(','):
                         h_clean = h.strip()
                         # 确保提取出的 hostname 不带任何干扰符号和残余注释
-                        if h_clean and not h_clean.startswith(';') and not h_clean.startswith('#'):
+                        if h_clean and not h_clean.startswith(';') and not h_clean.startswith('#') and not h_clean.startswith('//'):
                             # 进一步清洗 hostname 行尾可能夹带的注释
-                            h_clean = re.split(r'[;#]', h_clean)[0].strip()
+                            h_clean = re.split(r'[;#]|\/\/', h_clean)[0].strip()
                             mitm_hosts.add(h_clean)
                 except Exception:
                     sub_mitm.append(raw_line)
