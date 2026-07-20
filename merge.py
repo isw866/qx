@@ -21,7 +21,7 @@ def main():
         'update', '更新', 'history', '历史', 'changelog', '日志', 
         'tgchannel', 'telegram', '频道', '群组', 'author', '作者', 
         'drew', 'by', 'donation', '赞赏', '打赏', 'github', 'repo',
-        'version', '版本', 'date', '时间', 'modified', 'crack', '解锁'
+        'version', '版本', 'date', '时间', 'modified', 'crack', '解锁', '删除', '新增', '移除', '修复', '去除', '去掉'
     ]
 
     with open(list_file, 'r', encoding='utf-8') as f:
