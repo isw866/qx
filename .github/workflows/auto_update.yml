@@ -27,7 +27,7 @@ jobs:
     - name: Run Update Script
       id: run_script
       run: |
-        python your_script_name.py  # ⚠️ 请把这里替换为你实际的 Python 脚本文件名
+        python merge.py  # ⚠️ 请把这里替换为你实际的 Python 脚本文件名
 
     - name: Commit and Push if updated
       if: success()
