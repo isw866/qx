@@ -6,7 +6,7 @@ import re
 
 def clean_and_parse_content(content, noise_keywords, mitm_hosts):
     """
-    全量地毯式清洗规则内容，无差别抹除所有纯注释行（含 #, ;, //），并精准切除有效规则的行尾注释（不误伤 https://）
+    全量地毯式清洗规则内容，无差别抹除所有纯注释行（含 #, ;, //），并精准切除有效规则的行尾注释（绝不误伤正则斜杠）
     """
     sub_rewrite = []
     sub_mitm = []
@@ -35,10 +35,12 @@ def clean_and_parse_content(content, noise_keywords, mitm_hosts):
         if stripped_line.startswith(';') or stripped_line.startswith('#') or stripped_line.startswith('//'):
             continue
 
-        # 3. 精准切除行尾的行内注释 (支持 ;, #, 以及非 URL 的 //)
-        # 用正则匹配：分号、井号、或者前面没有冒号的双斜杠 (?<!:)//
-        # 这样可以完美避开 http:// 或 https:// 
-        comment_pattern = r'[;#]|(?<!:)//'
+        # 3. 精准切除行尾的行内注释
+        # 规则：
+        #   - [;#] 后面跟着的属于注释
+        #   - 必须是前面带有空格/制表符的 //（即 \s+//），或者是位于行尾的 //，这才叫行内注释。
+        #   - 这样可以完美放行类似于 https:// 或 \/\/ 这种紧凑粘连在正则和URL内部的斜杠。
+        comment_pattern = r'[;#]|\s+//'
         
         if re.search(comment_pattern, stripped_line):
             # 用正则精准切开规则体与注释体
