@@ -1,60 +1,43 @@
-name: Test Merge Rules
+name: Merge Quantumult X Rewrite Rules
 
 on:
-  workflow_dispatch: # 只保留手动触发，方便我们现在测试
+  schedule:
+    # 每 3 天自动运行一次（北京时间早上 08:00）
+    - cron: '0 0 */3 * *'
+  workflow_dispatch: # 保持手动触发，方便调试
 
 jobs:
-  test_merge:
+  merge_job:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Run Minimal Merge Script
-      run: |
-        cat << 'EOF' > test.py
-        import urllib.request
-        import os
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
 
-        list_file = 'rules_list.txt'
-        output_file = 'myRewrite.conf'
+    - name: Execute Merge Script
+      id: process_rules
+      run: python merge.py
 
-        if not os.path.exists(list_file):
-            print("Error: rules_list.txt not found!")
-            exit(1)
-
-        print("--- Start Fetching ---")
-        with open(list_file, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-
-        with open(output_file, 'w', encoding='utf-8') as out:
-            out.write('; Minimal Test\n')
-            
-            for line in lines:
-                line = line.strip()
-                if not line or line.startswith('#'):
-                    continue
-                try:
-                    name, url = line.split(',', 1)
-                    print(f"Fetching: {name.strip()}")
-                    
-                    req = urllib.request.Request(url.strip(), headers={'User-Agent': 'Mozilla/5.0'})
-                    with urllib.request.urlopen(req, timeout=10) as response:
-                        content = response.read().decode('utf-8')
-                        out.write(f"\n; === {name.strip()} ===\n")
-                        out.write(content)
-                except Exception as e:
-                    print(f"Failed to fetch {line}: {e}")
-
-        print("--- Fetching Done ---")
-        EOF
-        python test.py
-
-    - name: Push to Repository
+    - name: Commit and Push Changes
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add myRewrite.conf
-        git diff --quiet && git diff --staged --quiet || git commit -m "Test automatic update [Skip CI]"
+        git diff --quiet && git diff --staged --quiet || git commit -m "自动更新重写规则 [Skip CI]"
         git push
+
+    - name: Send Telegram Notification on Failure
+      if: steps.process_rules.outputs.failed == 'true'
+      run: |
+        ERRORS="${{ steps.process_rules.outputs.errors }}"
+        MSG="⚠️ *Quantumult X 规则更新异常警告* %0A%0A以下规则本次未能成功更新（网址失效或内容为空）：%0A\`$ERRORS\`%0A%0A其他正常规则已成功合并至 \`myRewrite.conf\` 并推送到仓库。"
+        
+        curl -s -X POST "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage" \
+          -d "chat_id=${{ secrets.TG_CHAT_ID }}" \
+          -d "text=$MSG" \
+          -d "parse_mode=MarkdownV2"
