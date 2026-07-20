@@ -5,3 +5,4 @@
 墨鱼-noAd-微博,https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeiboAds.conf
 墨鱼-noAd-张大妈,https://github.com/ddgksf2013/Rewrite/raw/master/AdBlock/SmzdmAds.conf
 墨鱼-noAd-网易云,https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf
+墨鱼-noAd-B站,https://ddgksf2013.top/rewrite/BiliBiliAds.conf
