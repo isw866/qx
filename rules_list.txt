@@ -10,3 +10,4 @@
 墨鱼-noAd-小红书,https://ddgksf2013.top/rewrite/XiaoHongShuAds.conf
 墨鱼-noAd-油管,https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/YoutubeAds.conf
 小红书水印,https://raw.githubusercontent.com/fmz200/wool_scripts/refs/heads/main/QuantumultX/rewrite/split/partX/Xiaohongshu.snippet
+贴吧净化,https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.snippet
