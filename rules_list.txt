@@ -1,0 +1,9 @@
+墨鱼-谷歌重定向,https://github.com/ddgksf2013/Rewrite/raw/master/Html/General.conf
+墨鱼-noAd-知乎,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/script/zheye/zheye.snippet
+墨鱼-noAd-高德,https://github.com/ddgksf2013/Rewrite/raw/master/AdBlock/AmapAds.conf
+墨鱼-noAd-闲鱼,https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/GoofishAds.conf
+墨鱼-noAd-知乎,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/script/zheye/zheye.snippet
+墨鱼-noAd-张大妈,https://github.com/ddgksf2013/Rewrite/raw/master/AdBlock/SmzdmAds.conf
+墨鱼-noAd-网易云,https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf
+墨鱼-noAd-小红书,https://ddgksf2013.top/rewrite/XiaoHongShuAds.conf
+墨鱼-noAd-B站,https://ddgksf2013.top/rewrite/BiliBiliAds.conf
