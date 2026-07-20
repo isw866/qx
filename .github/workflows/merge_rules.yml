@@ -1,166 +1,60 @@
-name: Merge Quantumult X Rewrite Rules
+name: Test Merge Rules
 
 on:
-  schedule:
-    - cron: '0 0 */3 * *'
-  workflow_dispatch:
+  workflow_dispatch: # 只保留手动触发，方便我们现在测试
 
 jobs:
-  merge:
+  test_merge:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-
-    - name: Process and Merge Rules
-      id: process_rules
+    - name: Run Minimal Merge Script
       run: |
-        python -c "
+        cat << 'EOF' > test.py
         import urllib.request
         import os
-        import sys
-        from datetime import datetime
 
         list_file = 'rules_list.txt'
         output_file = 'myRewrite.conf'
-        
+
         if not os.path.exists(list_file):
-            print(f'错误：未找到 {list_file} 文件！')
-            sys.exit(1)
+            print("Error: rules_list.txt not found!")
+            exit(1)
 
-        failed_rules = []
-        
-        # 用来分别存放解析出来的重写规则和 MITM 主机名
-        rewrite_lines = []
-        mitm_hosts = set()
-
+        print("--- Start Fetching ---")
         with open(list_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
 
-        for line in lines:
-            line = line.strip()
-            if not line or line.startswith('#'):
-                continue
+        with open(output_file, 'w', encoding='utf-8') as out:
+            out.write('; Minimal Test\n')
             
-            try:
-                name, url = line.split(',', 1)
-                name = name.strip()
-                url = url.strip()
-            except ValueError:
-                print(f'跳过格式错误的行: {line}')
-                continue
-
-            print(f'正在下载 [{name}]: {url}')
-            
-            try:
-                req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 QuantumultX'})
-                with urllib.request.urlopen(req, timeout=15) as response:
-                    content = response.read().decode('utf-8').strip()
+            for line in lines:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+                try:
+                    name, url = line.split(',', 1)
+                    print(f"Fetching: {name.strip()}")
                     
-                    if not content:
-                        raise Exception('下载内容为空')
-                    
-                    # 开始清洗数据，区分 rewrite 和 mitm
-                    current_section = 'rewrite' # 默认当作 rewrite 处理
-                    
-                    sub_rewrite = []
-                    sub_mitm = []
-                    
-                    for raw_line in content.splitlines():
-                        l = raw_line.strip()
-                        if not l:
-                            continue
-                        
-                        # 检测到标签，切换解析状态
-                        if l.lower() == '[rewrite_local]':
-                            current_section = 'rewrite'
-                            continue
-                        elif l.lower() == '[mitm]':
-                            current_section = 'mitm'
-                            continue
-                        elif l.startswith('[') and l.endswith(']'):
-                            # 忽略其他不相关的未知标签
-                            current_section = 'unknown'
-                            continue
-                        
-                        if current_section == 'rewrite':
-                            sub_rewrite.append(raw_line)
-                        elif current_section == 'mitm':
-                            # 处理 mitm 行，提取出 hostname
-                            if 'hostname' in l:
-                                try:
-                                    # 兼容 hostname = xxx 或 hostname=xxx
-                                    _, hosts = l.split('=', 1)
-                                    for h in hosts.split(','):
-                                        h_clean = h.strip()
-                                        if h_clean:
-                                            mitm_hosts.add(h_clean)
-                                except Exception:
-                                    sub_mitm.append(raw_line)
-                            else:
-                                sub_mitm.append(raw_line)
+                    req = urllib.request.Request(url.strip(), headers={'User-Agent': 'Mozilla/5.0'})
+                    with urllib.request.urlopen(req, timeout=10) as response:
+                        content = response.read().decode('utf-8')
+                        out.write(f"\n; === {name.strip()} ===\n")
+                        out.write(content)
+                except Exception as e:
+                    print(f"Failed to fetch {line}: {e}")
 
-                    # 如果清洗后有有效规则，包裹上注释存入总列表
-                    if sub_rewrite or sub_mitm:
-                        rewrite_lines.append(f'; === 开始: {name} ===')
-                        if sub_rewrite:
-                            rewrite_lines.extend(sub_rewrite)
-                        if sub_mitm:
-                            # 兼容某些作者在 mitm 下写了非 hostname 的其它配置
-                            rewrite_lines.extend(sub_mitm)
-                        rewrite_lines.append(f'; === 结束: {name} ===\n')
-                    
-            except Exception as e:
-                print(f'❌ 规则 [{name}] 下载失败: {str(e)}')
-                failed_rules.append(f'{name} ({str(e)})')
+        print("--- Fetching Done ---")
+        EOF
+        python test.py
 
-        # 组装最终符合 Quantumult X 规范的单一 conf 文件
-        final_content = [
-            '; Quantumult X 重写规则集合',
-            '; 自动更新于: ' + datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            '; --------------------------------------------------\n',
-            '[rewrite_local]'
-        ]
-        
-        final_content.extend(rewrite_lines)
-        
-        if mitm_hosts:
-            final_content.append('[mitm]')
-            final_content.append('hostname = ' + ', '.join(sorted(list(mitm_hosts))))
-
-        # 写入文件
-        if rewrite_lines: 
-            with open(output_file, 'w', encoding='utf-8') as out:
-                out.write('\n'.join(final_content))
-
-        # 错误挂载到环境变量
-        if failed_rules:
-            with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as go:
-                go.write('failed=true\n')
-                go.write('errors=' + ', '.join(failed_rules) + '\n')
-        "
-
-    - name: Commit and Push Changes
+    - name: Push to Repository
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add myRewrite.conf
-        git diff --quiet && git diff --staged --quiet || git commit -m "自动更新重写规则 [Skip CI]"
+        git diff --quiet && git diff --staged --quiet || git commit -m "Test automatic update [Skip CI]"
         git push
-
-    - name: Send Telegram Notification on Failure
-      if: steps.process_rules.outputs.failed == 'true'
-      run: |
-        ERRORS="${{ steps.process_rules.outputs.errors }}"
-        MSG="⚠️ *Quantumult X 规则更新异常警告* %0A%0A以下规则本次未能成功更新（网址失效或内容为空）：%0A\`$ERRORS\`%0A%0A其他正常规则已成功合并至 \`myRewrite.conf\` 并推送到仓库。"
-        
-        curl -s -X POST "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage" \
-          -d "chat_id=${{ secrets.TG_CHAT_ID }}" \
-          -d "text=$MSG" \
-          -d "parse_mode=MarkdownV2"
