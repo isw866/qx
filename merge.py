@@ -6,7 +6,7 @@ import re
 
 def clean_and_parse_content(content, noise_keywords, mitm_hosts):
     """
-    全量地毯式清洗规则内容，只要包含敏感词的注释行统统抹除，确保防盗链源同样生效
+    全量地毯式清洗规则内容，无差别抹除所有纯注释行，并切除有效规则的行尾注释
     """
     sub_rewrite = []
     sub_mitm = []
@@ -31,28 +31,20 @@ def clean_and_parse_content(content, noise_keywords, mitm_hosts):
             current_section = 'unknown'
             continue
 
-        # 2. 核心拦截：如果这一行是纯注释行，直接进行关键词全量匹配
+        # 2. 强力防线：只要是纯注释行，无差别直接丢弃，不检查任何关键词
         if stripped_line.startswith(';') or stripped_line.startswith('#'):
-            l_lower = stripped_line.lower()
-            # 命中你更新的任意一个噪音词，直接丢弃该行
-            if any(kw in l_lower for kw in noise_keywords):
-                continue
-            # 顺手清理掉只包含装饰性符号的干扰行（例如 ; ---------- 或 ; ======）
-            if re.match(r'^[;#\s\-\=\*\!\/\.\+\~]+$', stripped_line):
-                continue
+            continue
 
-        # 3. 处理行尾的行内注释 (例如: url reject-img ; 屏蔽某某广告)
-        if ';' in raw_line or '#' in raw_line:
+        # 3. 精准切除行尾的行内注释 (例如: url reject-img ; 屏蔽某某广告)
+        # 不管注释放了什么，只要有分号或井号在规则中间，后面的东西全部抹除
+        if ';' in stripped_line or '#' in stripped_line:
             # 用正则精准切开规则体与注释体
-            parts = re.split(r'[;#]', raw_line, 1)
-            if len(parts) == 2:
-                core_part, comment_part = parts[0], parts[1]
-                # 如果行尾的注释里包含噪音词，直接把注释切掉，只保留前面的核心规则
-                if any(kw in comment_part.lower() for kw in noise_keywords):
-                    raw_line = core_part.rstrip()
-                    stripped_line = raw_line.strip()
-                    if not stripped_line:
-                        continue
+            parts = re.split(r'[;#]', stripped_line, 1)
+            core_part = parts[0].strip()
+            if not core_part:
+                continue
+            stripped_line = core_part
+            raw_line = core_part  # 覆盖原有 raw_line，确保写入的是干净的规则
 
         # 4. 分流归类有效规则
         if current_section == 'rewrite':
@@ -87,7 +79,7 @@ def main():
     rewrite_lines = []
     mitm_hosts = set()
 
-    # 你更新后的强力噪音拦截词库
+    # 保留降噪词库以防未来其他逻辑扩展需要
     noise_keywords = [
         'update', '更新', 'history', '历史', 'changelog', '日志', 
         'tgchannel', 'telegram', '频道', '群组', 'author', '作者', 
