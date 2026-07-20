@@ -81,7 +81,10 @@ def main():
         sys.exit(1)
 
     failed_rules = []
-    rewrite_lines = []
+    
+    # 将两种类型的规则完全分离开来存放
+    total_rewrite_lines = []
+    total_mitm_lines = []
     mitm_hosts = set()
 
     # 保留降噪词库以防未来其他逻辑扩展需要
@@ -131,32 +134,44 @@ def main():
                 # 调用深度清洗
                 sub_rewrite, sub_mitm = clean_and_parse_content(content, noise_keywords, mitm_hosts)
 
-                if sub_rewrite or sub_mitm:
-                    rewrite_lines.append(f"; === 开始: {name} ===")
-                    if sub_rewrite:
-                        rewrite_lines.extend(sub_rewrite)
-                    if sub_mitm:
-                        rewrite_lines.extend(sub_mitm)
-                    rewrite_lines.append(f"; === 结束: {name} ===\n")
+                # 将重写规则加入各自的板块里，并用注释标明出处
+                if sub_rewrite:
+                    total_rewrite_lines.append(f"; === 开始: {name} ===")
+                    total_rewrite_lines.extend(sub_rewrite)
+                    total_rewrite_lines.append(f"; === 结束: {name} ===\n")
+                
+                # 将可能存在的非 hostname 的 mitm 规则追加到对应的板块
+                if sub_mitm:
+                    total_mitm_lines.append(f"; === 开始: {name} ===")
+                    total_mitm_lines.extend(sub_mitm)
+                    total_mitm_lines.append(f"; === 结束: {name} ===\n")
                 
         except Exception as e:
             print(f"❌ 规则 [{name}] 下载失败: {str(e)}")
             failed_rules.append(f"{name} ({str(e)})")
 
+    # 开始组装最终的文件内容
     final_content = [
         '; Quantumult X 重写规则集合',
         '; 自动更新于: ' + datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         '; --------------------------------------------------\n',
-        '[rewrite_local]'
     ]
     
-    final_content.extend(rewrite_lines)
-    
-    if mitm_hosts:
+    # 1. 写入所有的重写规则
+    if total_rewrite_lines:
+        final_content.append('[rewrite_local]')
+        final_content.extend(total_rewrite_lines)
+        
+    # 2. 写入 MITM 板块（合并去重后的主机名以及可能存在的独立 mitm 规则）
+    if mitm_hosts or total_mitm_lines:
         final_content.append('[mitm]')
-        final_content.append('hostname = ' + ', '.join(sorted(list(mitm_hosts))))
+        if mitm_hosts:
+            final_content.append('hostname = ' + ', '.join(sorted(list(mitm_hosts))))
+        if total_mitm_lines:
+            final_content.extend(total_mitm_lines)
 
-    if rewrite_lines: 
+    # 只要生成了任何有效规则，就写入文件
+    if total_rewrite_lines or mitm_hosts or total_mitm_lines: 
         with open(output_file, 'w', encoding='utf-8') as out:
             out.write('\n'.join(final_content))
 
