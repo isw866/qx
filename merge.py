@@ -15,8 +15,7 @@ def main():
     rewrite_lines = []
     mitm_hosts = set()
 
-    # 定义需要过滤掉的无用注释关键词（不区分大小写）
-    # 只要注释行包含这些词，就会被直接无视
+
     noise_keywords = [
         'update', '更新', 'history', '历史', 'changelog', '日志', 
         'tgchannel', 'telegram', '频道', '群组', 'author', '作者', 
@@ -43,12 +42,24 @@ def main():
         print(f"正在下载 [{name}]: {url}")
         
         try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 QuantumultX'})
+            # 核心改进：使用深度模拟的 Quantumult X 真实客户端请求头，绕过防盗链重定向
+            headers = {
+                'User-Agent': 'Quantumult%20X/1.5.0 (iPhone; iOS 18.2; Scale/3.00)',
+                'Accept': '*/*',
+                'Connection': 'keep-alive'
+            }
+            req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=15) as response:
-                content = response.read().decode('utf-8').strip()
+                # 检查是否存在重定向回首页的情况（比如解析到了 HTML 标签）
+                content_bytes = response.read()
+                content = content_bytes.decode('utf-8').strip()
                 
                 if not content:
                     raise Exception("下载内容为空")
+                
+                # 安全阀：如果内容里包含 <html> 或 <script，说明被重定向到了网页首页，判定为下载失败
+                if '<html' in content.lower() or '<doctype' in content.lower():
+                    raise Exception("被服务器拦截重定向至网页首页")
                 
                 current_section = 'rewrite'
                 sub_rewrite = []
@@ -59,11 +70,10 @@ def main():
                     if not l:
                         continue
                     
-                    # 1. 过滤垃圾注释：如果这一行是注释，且包含了特定的无关关键词，直接跳过
                     if l.startswith(';') or l.startswith('#'):
                         l_lower = l.lower()
                         if any(kw in l_lower for kw in noise_keywords):
-                            continue  # 命中了垃圾关键词，跳过这一行
+                            continue
                     
                     if l.lower() == '[rewrite_local]':
                         current_section = 'rewrite'
@@ -102,7 +112,6 @@ def main():
             print(f"❌ 规则 [{name}] 下载失败: {str(e)}")
             failed_rules.append(f"{name} ({str(e)})")
 
-    # 组装最终符合规范的 conf 文件
     final_content = [
         '; Quantumult X 重写规则集合',
         '; 自动更新于: ' + datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
