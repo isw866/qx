@@ -6,7 +6,7 @@ import re
 
 def clean_and_parse_content(content, noise_keywords, mitm_hosts):
     """
-    全量地毯式清洗规则内容，无差别抹除所有纯注释行（含 #, ;, //），并切除有效规则的行尾注释
+    全量地毯式清洗规则内容，无差别抹除所有纯注释行（含 #, ;, //），并精准切除有效规则的行尾注释（不误伤 https://）
     """
     sub_rewrite = []
     sub_mitm = []
@@ -35,12 +35,14 @@ def clean_and_parse_content(content, noise_keywords, mitm_hosts):
         if stripped_line.startswith(';') or stripped_line.startswith('#') or stripped_line.startswith('//'):
             continue
 
-        # 3. 精准切除行尾的行内注释 (支持 ;, #, //)
-        # 不管注释放了什么，只要有分号、井号或双斜杠在规则中间，后面的东西全部抹除
-        # 先用正则把 // 统一替换成 ; 方便切分，或者直接用正则切分
-        if ';' in stripped_line or '#' in stripped_line or '//' in stripped_line:
-            # 用正则精准切开规则体与注释体（匹配 ;, # 或 //）
-            parts = re.split(r'[;#]|\/\/', stripped_line, 1)
+        # 3. 精准切除行尾的行内注释 (支持 ;, #, 以及非 URL 的 //)
+        # 用正则匹配：分号、井号、或者前面没有冒号的双斜杠 (?<!:)//
+        # 这样可以完美避开 http:// 或 https:// 
+        comment_pattern = r'[;#]|(?<!:)//'
+        
+        if re.search(comment_pattern, stripped_line):
+            # 用正则精准切开规则体与注释体
+            parts = re.split(comment_pattern, stripped_line, 1)
             core_part = parts[0].strip()
             if not core_part:
                 continue
@@ -59,7 +61,7 @@ def clean_and_parse_content(content, noise_keywords, mitm_hosts):
                         # 确保提取出的 hostname 不带任何干扰符号和残余注释
                         if h_clean and not h_clean.startswith(';') and not h_clean.startswith('#') and not h_clean.startswith('//'):
                             # 进一步清洗 hostname 行尾可能夹带的注释
-                            h_clean = re.split(r'[;#]|\/\/', h_clean)[0].strip()
+                            h_clean = re.split(comment_pattern, h_clean)[0].strip()
                             mitm_hosts.add(h_clean)
                 except Exception:
                     sub_mitm.append(raw_line)
