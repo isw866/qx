@@ -1,0 +1,45 @@
+name: Auto Update Rewrite Config
+
+on:
+  # 核心：当 rules_list.txt 文件发生变动并推送到 main 分支时自动触发
+  push:
+    branches:
+      - main
+    paths:
+      - 'rules_list.txt'
+  
+  # 保留手动触发机制，方便你随时手动点击运行
+  workflow_dispatch:
+
+jobs:
+  update-config:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Run Update Script
+      id: run_script
+      run: |
+        python your_script_name.py  # ⚠️ 请把这里替换为你实际的 Python 脚本文件名
+
+    - name: Commit and Push if updated
+      if: success()
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        
+        # 检查 myRewrite.conf 是否有变动
+        if [ -n "$(git status --porcelain myRewrite.conf)" ]; then
+          git add myRewrite.conf
+          git commit -m "chore: auto update myRewrite.conf [skip ci]"
+          git push
+        else
+          echo "myRewrite.conf 没有变化，跳过提交。"
+        fi
