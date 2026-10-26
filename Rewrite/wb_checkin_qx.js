@@ -61,7 +61,7 @@ const CFG = {
   delayMin: 1500,   // 多账号随机间隔下限 (ms)
   delayMax: 3000,   // 多账号随机间隔上限 (ms), 对应 Python 版 5-10s, QX 有限时故缩短
   notify: true,     // 结束后弹本地通知
-  captureDebug: false, // 排障开关: 改为 true 后, Safari 访问 codebuddy.cn 每个被 QX 拦截的请求都会弹调试通知
+  captureDebug: true, // 排障开关: 改为 true 后, Safari 访问 codebuddy.cn 每个被 QX 拦截的请求都会弹调试通知
                        // (会提示 rewrite/MITM 是否生效、请求里有没有 Authorization), 排查完务必改回 false
 };
 
