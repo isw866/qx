@@ -24,9 +24,13 @@
  *      或将脚本放入 iCloud「Quantumult X/Scripts」后用本地文件名引用。
  *
  * ========================= 账号配置 (二选一) =========================
- * 方式A: 抓包捕获 —— 见上文第二步, 令牌自动写入 QX 持久化存储, 多账号可分别登录捕获。
- * 方式B: 手动填写 —— 在下方 MANUAL_ACCOUNTS 中粘贴账号信息 (可从桌面端
- *        ZaiZaiCat-Checkin 的 config/token.json 中直接复制账号对象)。
+ * 方式A: 手动填写(推荐) —— 先在电脑上运行本目录 wb_decrypt_local.js 提取令牌
+ *        (自动向官方客户端索取密钥并解密登录态), 把生成的 token_for_qx.json
+ *        内容粘贴到下方 MANUAL_ACCOUNTS。
+ *        ⚠️ 注意: codebuddy.cn 网页版是 Cookie 鉴权, Safari 抓包抓不到 Bearer,
+ *        所以抓包捕获(rewrite)对网页版无效, iOS 上请用本方式。
+ * 方式B: 抓包捕获 —— 仅当有会发出 Authorization: Bearer 的流量经过 QX 时有效
+ *        (如桌面端流量走了 iPhone 热点代理), 一般用户可忽略。
  * ====================================================================
  *
  * 与 Python 版的差异:
@@ -61,7 +65,7 @@ const CFG = {
   delayMin: 1500,   // 多账号随机间隔下限 (ms)
   delayMax: 3000,   // 多账号随机间隔上限 (ms), 对应 Python 版 5-10s, QX 有限时故缩短
   notify: true,     // 结束后弹本地通知
-  captureDebug: true, // 排障开关: 改为 true 后, Safari 访问 codebuddy.cn 每个被 QX 拦截的请求都会弹调试通知
+  captureDebug: false, // 排障开关: 改为 true 后, Safari 访问 codebuddy.cn 每个被 QX 拦截的请求都会弹调试通知
                        // (会提示 rewrite/MITM 是否生效、请求里有没有 Authorization), 排查完务必改回 false
 };
 
