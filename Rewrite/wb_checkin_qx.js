@@ -13,11 +13,15 @@
  *   0 9 * * * https://raw.githubusercontent.com/你的用户名/你的仓库/main/wb_checkin_qx.js, tag=WorkBuddy签到, enabled=true
  *
  * 二、自动抓取令牌 (可选但推荐), 在 [rewrite_local] 中添加 (同一脚本地址):
- *   ^https?:\/\/www\.codebuddy\.cn url script-request-header https://raw.githubusercontent.com/你的用户名/你的仓库/main/wb_checkin_qx.js
+ *   ^https?:\/\/(www\.)?codebuddy\.cn url script-request-header https://你的脚本地址/wb_checkin_qx.js
  *   并在 [mitm] 中追加 hostname (与已有 hostname 逗号合并, 勿覆盖):
  *   hostname = www.codebuddy.cn
  *   开启 MITM 并安装信任 QX 证书后, 用 Safari 访问 https://www.codebuddy.cn 登录,
  *   弹出「令牌捕获成功」通知即完成配置, 无需手动抓包。
+ *   ⚠️ 脚本地址务必用 iPhone 上可达的 URL (在 Safari 里能直接打开看到源码)。
+ *      raw.githubusercontent.com 在国内经常无法访问, 推荐用 jsDelivr:
+ *      https://cdn.jsdelivr.net/gh/用户名/仓库名@main/wb_checkin_qx.js
+ *      或将脚本放入 iCloud「Quantumult X/Scripts」后用本地文件名引用。
  *
  * ========================= 账号配置 (二选一) =========================
  * 方式A: 抓包捕获 —— 见上文第二步, 令牌自动写入 QX 持久化存储, 多账号可分别登录捕获。
@@ -57,6 +61,8 @@ const CFG = {
   delayMin: 1500,   // 多账号随机间隔下限 (ms)
   delayMax: 3000,   // 多账号随机间隔上限 (ms), 对应 Python 版 5-10s, QX 有限时故缩短
   notify: true,     // 结束后弹本地通知
+  captureDebug: false, // 排障开关: 改为 true 后, Safari 访问 codebuddy.cn 每个被 QX 拦截的请求都会弹调试通知
+                       // (会提示 rewrite/MITM 是否生效、请求里有没有 Authorization), 排查完务必改回 false
 };
 
 /* ================ 以下为脚本主体, 一般无需修改 ================ */
@@ -538,7 +544,19 @@ function lowerKeys(headers) {
 function capture() {
   try {
     const h = lowerKeys(($request && $request.headers) || {});
+    const url = String(($request && $request.url) || '');
     const auth = String(h['authorization'] || '');
+
+    // 调试模式: 证明 rewrite/MITM 链路是否打通、请求里有没有带鉴权头
+    if (CFG.captureDebug) {
+      const keys = Object.keys(h).join(', ') || '(无请求头)';
+      notify('WB捕获调试',
+        '✅ rewrite 已生效, 脚本被正常调用',
+        'URL: ' + url.slice(0, 90)
+        + '\n请求头字段: ' + keys.slice(0, 200)
+        + '\n鉴权: ' + (auth ? '有 Authorization (若见「令牌捕获成功」即配置完成)' : '❌ 无 Authorization —— 页面还没发出带 token 的请求, 请在网页里点几个页面/刷新一次'));
+    }
+
     if (auth.toLowerCase().indexOf('bearer ') !== 0) return;
     const token = auth.slice(7).trim();
     if (!token) return;
