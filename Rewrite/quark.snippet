@@ -1,0 +1,11 @@
+# 夸克去广告 - QX 远程重写 snippet
+# 在 QX [rewrite_remote] 中引用本文件的 raw 地址即可一键导入
+# 使用前把下方 <你的用户名>/<仓库名> 替换成你自己的 GitHub 仓库路径
+
+[rewrite_local]
+^https://open-cms-api\.quark\.cn/open-cms\? url script-response-body https://cdn.jsdelivr.net/gh/<你的用户名>/<仓库名>@main/quark_remove_ads.js
+^https://stars\.shuqireader\.com/kkios/render/load/resource/app$ url reject-dict
+^https://stars\.shuqireader\.com/kkios/render/load/resource/appConfig$ url reject-dict
+
+[mitm]
+hostname = open-cms-api.quark.cn, stars.shuqireader.com
