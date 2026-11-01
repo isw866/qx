@@ -43,18 +43,3 @@
 # hostname = home.mi.com
 ^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/recommendation\/(banner|carousel\/banners|myTab|openingBanner) url reject-dict
 ^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/resource\/realtime\/openingBanner url reject-dict
-
-# > 小白学习打印机
-# hostname = api.xbxxhz.com
-# 开屏广告
-# 捕获试卷脚本：https://raw.githubusercontent.com/Yu9191/Script/main/shijuan.js
-^https?:\/\/api\.xbxxhz\.com\/big_data\/v1\/home_pages url reject
-^https://epbox\.gongfudou\.com/big_data/v\d/banners\? url reject-dict
-^https://epbox\.gongfudou\.com/big_data/v\d/canvas/query_actions\? url reject-dict
-^https://epbox\.gongfudou\.com/graphql$ url script-response-body https://raw.githubusercontent.com/isw866/qx/refs/heads/main/Rewrite/xiaobai_print_remove_ads.js
-
-# > 财运天气
-^https://biz\.cyapi\.cn/(p/v1/entries|p/v1/trial_card/info|v2/product) url reject-dict
-^https://starplucker\.cyapi\.cn/v3/(config/cypage/\w+/conditions|notification/message_center|operation/homefeatures) url reject-dict
-^https://(wrapper\.cyapi\.cn|api\.caiyunapp\.com|cdn-w\.caiyunapp\.com)/v1/activity\? url script-response-body https://raw.githubusercontent.com/isw866/qx/refs/heads/main/Rewrite/ColorfulClouds_remove_ads.js
-
